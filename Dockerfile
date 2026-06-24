@@ -15,8 +15,8 @@ WORKDIR /app/frontend
 # Copy package files first (Docker caches this layer)
 COPY frontend/package*.json ./
 
-# Install dependencies
-RUN npm ci
+# Install dependencies (using install instead of ci for better compatibility in Render)
+RUN npm install
 
 # Copy the rest of the frontend code
 COPY frontend/ ./
