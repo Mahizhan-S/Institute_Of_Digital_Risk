@@ -4,6 +4,17 @@ A full-stack application demonstrating backend system design with **FastAPI**, *
 
 ---
 
+## Live Deployment
+
+**Live URL:** [https://idr-transaction-system.onrender.com](https://idr-transaction-system.onrender.com)
+
+**Deployment Notes (Render Free Tier):**
+- **Cold Starts:** The web service will automatically "sleep" after 15 minutes of inactivity. When you visit the URL after it has been asleep, it may take 30–60 seconds for the application to spin back up. 
+- **Database Expiration:** The free-tier PostgreSQL database provided by Render will automatically expire 30 days after creation.
+- **Continuous Deployment:** The application is connected to this repository and automatically redeploys from the `master` branch via `render.yaml` infrastructure-as-code.
+
+---
+
 ## Architecture
 
 ```mermaid
