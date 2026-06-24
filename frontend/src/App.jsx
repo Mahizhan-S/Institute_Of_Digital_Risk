@@ -37,10 +37,6 @@ function App() {
               <p className="text-xs text-slate-400">Transaction & Ranking Dashboard</p>
             </div>
           </div>
-          <a href="/docs" target="_blank" rel="noopener noreferrer"
-            className="text-xs font-medium text-slate-300 hover:text-white transition-colors bg-slate-800 px-3 py-1.5 rounded-md border border-slate-700 hover:border-slate-600 shadow-sm">
-            API Documentation
-          </a>
         </div>
       </header>
 
