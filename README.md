@@ -6,18 +6,34 @@ A full-stack application demonstrating backend system design with **FastAPI**, *
 
 ## Architecture
 
-```
-┌──────────────┐     ┌──────────────────┐     ┌────────────┐
-│   React +    │────▶│   FastAPI         │────▶│ PostgreSQL │
-│  Tailwind    │     │   Backend         │     │  (Storage)  │
-│  (Frontend)  │◀────│                   │────▶│            │
-└──────────────┘     └──────────────────┘     └────────────┘
-                              │
-                              ▼
-                      ┌────────────┐
-                      │   Redis    │
-                      │  (Cache)   │
-                      └────────────┘
+```mermaid
+flowchart TD
+    Client["💻 Client (React + Tailwind CSS)"]
+
+    subgraph Backend["🚀 FastAPI Backend"]
+        API["⚙️ API Endpoints"]
+        Validator["🛡️ Request Validator (Pydantic)"]
+        RL["⏱️ Rate Limiter"]
+        Idemp["🔁 Idempotency Guard"]
+        Ranking["🏆 Ranking Algorithm"]
+    end
+
+    subgraph Data["💾 Storage & Cache Layer"]
+        Redis[("⚡ Redis<br>In-Memory Cache")]
+        PG[("🐘 PostgreSQL<br>Persistent Storage")]
+    end
+
+    Client -- "HTTP Requests" --> API
+    API --> Validator
+    Validator --> RL
+    RL -- "Check sliding window (ZSET)" --> Redis
+    RL --> Idemp
+    Idemp -- "Check/Set key (24h TTL)" --> Redis
+    Idemp -- "Row-level lock (FOR UPDATE)" --> PG
+    
+    API --> Ranking
+    Ranking -- "Cache leaderboard (30s TTL)" --> Redis
+    Ranking -- "Fetch user metrics" --> PG
 ```
 
 | Layer | Technology | Purpose |
@@ -188,25 +204,37 @@ users (id, name, created_at)
 
 ## Data Flow
 
-```
-POST /api/transaction
-  │
-  ├─ Redis: check idempotency key ──▶ HIT → return cached response (200)
-  │                                    MISS ↓
-  ├─ Redis: check rate limit ────────▶ EXCEEDED → 429 Too Many Requests
-  │                                    OK ↓
-  ├─ PostgreSQL: validate user exists
-  │
-  ├─ PostgreSQL: BEGIN TRANSACTION
-  │     ├─ SELECT ... FOR UPDATE (lock summary row)
-  │     ├─ Validate balance (for spend)
-  │     ├─ INSERT INTO transactions
-  │     ├─ UPDATE user_summaries
-  │     └─ COMMIT
-  │
-  ├─ Redis: cache response (24h TTL)
-  │
-  └─ Return 201 Created
+```mermaid
+sequenceDiagram
+    participant C as Client
+    participant A as API
+    participant R as Redis
+    participant P as PostgreSQL
+
+    C->>A: POST /api/transaction
+    A->>R: Check Idempotency Key
+    alt Key Exists
+        R-->>A: Cached Response
+        A-->>C: 200 OK (Duplicate Prevented)
+    else Key Not Found
+        A->>R: Check Rate Limit (Sliding Window)
+        alt Limit Exceeded
+            R-->>A: Exceeded
+            A-->>C: 429 Too Many Requests
+        else Within Limit
+            R-->>A: OK
+            A->>P: Validate User Exists
+            A->>P: BEGIN TRANSACTION
+            A->>P: SELECT ... FOR UPDATE (Lock Row)
+            A->>P: Validate Balance (If Spend)
+            A->>P: INSERT INTO transactions
+            A->>P: UPDATE user_summaries
+            A->>P: COMMIT
+            P-->>A: Success
+            A->>R: Cache Response (24h TTL)
+            A-->>C: 201 Created
+        end
+    end
 ```
 
 ---
