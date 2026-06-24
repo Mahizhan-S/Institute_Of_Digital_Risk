@@ -49,38 +49,7 @@ function App() {
           <TransactionForm users={users} onSuccess={showToast} />
           <UserSummary users={users} refreshTrigger={refreshTrigger} />
           <RankingTable refreshTrigger={refreshTrigger} />
-        </div>
-
-        {/* Technical Architecture Details */}
-        <div className="mt-8 panel p-6">
-          <h3 className="section-title mb-4">System Architecture & Safeguards</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-xs text-slate-400">
-            <div>
-              <p className="font-semibold text-slate-200 mb-1">Idempotency Guard</p>
-              <p className="leading-relaxed">Requests require a unique idempotency key. Duplicates are intercepted via Redis (24h TTL) to prevent double-processing.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200 mb-1">Concurrency Control</p>
-              <p className="leading-relaxed">PostgreSQL utilizes row-level locking (SELECT ... FOR UPDATE) to strictly serialize concurrent requests per user.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200 mb-1">Rate Limiting</p>
-              <p className="leading-relaxed">Redis sliding window implementation restricts traffic to 10 requests per user per minute to mitigate abuse.</p>
-            </div>
-            <div>
-              <p className="font-semibold text-slate-200 mb-1">Algorithmic Ranking</p>
-              <p className="leading-relaxed">Multi-factor normalization: 40% Net Balance, 35% Transaction Count, and 25% Average Transaction Value.</p>
-            </div>
-          </div>
-        </div>
       </main>
-
-      <footer className="border-t border-slate-800 mt-auto py-6">
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center text-xs text-slate-500">
-          <p>&copy; {new Date().getFullYear()} Institute of Digital Risk. All rights reserved.</p>
-          <p className="font-mono">SYS_READY · v1.0.0</p>
-        </div>
-      </footer>
     </div>
   );
 }
