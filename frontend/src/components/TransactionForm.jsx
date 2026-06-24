@@ -41,63 +41,63 @@ function TransactionForm({ users, onSuccess }) {
   }
 
   return (
-    <div className="glass-card p-6 animate-fade-in">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-center text-white text-lg">💸</div>
-        <div>
-          <h2 className="text-lg font-semibold text-white">New Transaction</h2>
-          <p className="text-sm text-slate-400">Create an earn or spend transaction</p>
-        </div>
+    <div className="panel p-6 animate-fade-in">
+      <div className="mb-5 pb-4 border-b border-slate-800/50">
+        <h2 className="section-title">New Transaction</h2>
+        <p className="section-subtitle">Record an earning or expenditure</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">User</label>
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">User Account</label>
           <select id="user-select" value={userId} onChange={(e) => setUserId(e.target.value)} className="input-field">
-            <option value="">Select a user...</option>
+            <option value="">Select an account...</option>
             {users.map((u) => <option key={u.id} value={u.id}>{u.name} ({u.id})</option>)}
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">Type</label>
-          <div className="flex gap-2">
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">Transaction Type</label>
+          <div className="flex gap-2 bg-slate-900 p-1 rounded-md border border-slate-800">
             {['earn', 'spend'].map((t) => (
               <button key={t} type="button" onClick={() => setType(t)}
-                className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-all ${
+                className={`flex-1 py-1.5 px-3 rounded text-xs font-medium transition-all ${
                   type === t
-                    ? t === 'earn' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                    : 'bg-dark-700 text-slate-400 border border-transparent hover:bg-dark-600'
+                    ? t === 'earn' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-red-600 text-white shadow-sm'
+                    : 'text-slate-400 hover:text-slate-200'
                 }`}>
-                {t === 'earn' ? '↑ Earn' : '↓ Spend'}
+                {t === 'earn' ? 'Credit (Earn)' : 'Debit (Spend)'}
               </button>
             ))}
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">Amount ($)</label>
-          <input id="amount-input" type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00" min="0.01" max="10000" step="0.01" className="input-field" />
-          <p className="text-xs text-slate-500 mt-1">Max $10,000 per transaction</p>
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">Amount (USD)</label>
+          <div className="relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">$</span>
+            <input id="amount-input" type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00" min="0.01" max="10000" step="0.01" className="input-field pl-7 metric-value" />
+          </div>
+          <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wide">Limit: $10,000.00</p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">Description (optional)</label>
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">Reference Note</label>
           <input id="description-input" type="text" value={description} onChange={(e) => setDescription(e.target.value)}
-            placeholder="What's this transaction for?" maxLength={255} className="input-field" />
+            placeholder="Optional reference details" maxLength={255} className="input-field" />
         </div>
 
-        <button id="submit-transaction" type="submit" disabled={loading} className="btn-primary w-full">
+        <button id="submit-transaction" type="submit" disabled={loading} className="btn-primary w-full mt-2">
           {loading ? (
             <span className="flex items-center justify-center gap-2">
-              <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+              <svg className="animate-spin h-3.5 w-3.5" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
               </svg>
               Processing...
             </span>
-          ) : `Create ${type === 'earn' ? 'Earn' : 'Spend'} Transaction`}
+          ) : `Execute ${type === 'earn' ? 'Credit' : 'Debit'}`}
         </button>
       </form>
     </div>
