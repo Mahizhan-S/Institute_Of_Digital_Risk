@@ -1,0 +1,71 @@
+# ============================================================
+# Docker Compose - runs all 3 services together
+#
+# Services:
+# 1. app       - FastAPI backend + React frontend
+# 2. postgres  - PostgreSQL database
+# 3. redis     - Redis cache (idempotency, rate limiting, ranking cache)
+#
+# To start everything:
+#   docker compose up --build
+#
+# To stop:
+#   docker compose down
+#
+# To stop and delete all data:
+#   docker compose down -v
+# ============================================================
+
+services:
+  # --- PostgreSQL Database ---
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: transaction_db
+    ports:
+      - "5432:5432"
+    volumes:
+      # Persist data between restarts
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      # Make sure PostgreSQL is ready before starting the app
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- Redis Cache ---
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # --- FastAPI Application ---
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      # These tell the app where to find PostgreSQL and Redis
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/transaction_db
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      # Wait for databases to be healthy before starting
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+# Named volumes for data persistence
+volumes:
+  postgres_data:
+  redis_data:
