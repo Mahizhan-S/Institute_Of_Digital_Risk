@@ -49,6 +49,7 @@ function App() {
           <TransactionForm users={users} onSuccess={showToast} />
           <UserSummary users={users} refreshTrigger={refreshTrigger} />
           <RankingTable refreshTrigger={refreshTrigger} />
+        </div>
       </main>
     </div>
   );
