@@ -78,9 +78,9 @@ function RankingTable({ refreshTrigger }) {
                       <div className="score-bar-fill" style={{ width: `${entry.score}%` }} />
                     </div>
                     <div className="flex justify-between mt-2 text-[10px] uppercase tracking-wide text-slate-500 metric-value">
-                      <span>Bal: ${entry.netBalance.toFixed(0)}</span>
+                      <span>Bal: ₹{entry.netBalance.toFixed(0)}</span>
                       <span>Vol: {entry.transactionCount}</span>
-                      <span>Avg: ${entry.avgTransactionValue.toFixed(0)}</span>
+                      <span>Avg: ₹{entry.avgTransactionValue.toFixed(0)}</span>
                     </div>
                   </div>
                 </div>

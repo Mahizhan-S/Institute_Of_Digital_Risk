@@ -13,7 +13,7 @@ function TransactionForm({ users, onSuccess }) {
 
     if (!userId) return onSuccess('Please select a user', 'error');
     if (!amount || parseFloat(amount) <= 0) return onSuccess('Enter a valid amount', 'error');
-    if (parseFloat(amount) > 10000) return onSuccess('Amount cannot exceed $10,000', 'error');
+    if (parseFloat(amount) > 10000) return onSuccess('Amount cannot exceed ₹10,000', 'error');
 
     setLoading(true);
     try {
@@ -28,7 +28,7 @@ function TransactionForm({ users, onSuccess }) {
       onSuccess(
         result.isDuplicate
           ? 'Duplicate request — no new transaction created'
-          : `Transaction created! ${type === 'earn' ? '+' : '-'}$${parseFloat(amount).toFixed(2)}`,
+          : `Transaction created! ${type === 'earn' ? '+' : '-'}₹${parseFloat(amount).toFixed(2)}`,
         result.isDuplicate ? 'warning' : 'success'
       );
       setAmount('');
@@ -73,13 +73,13 @@ function TransactionForm({ users, onSuccess }) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">Amount (USD)</label>
+          <label className="block text-xs font-semibold text-slate-300 mb-1.5 uppercase tracking-wide">Amount (INR)</label>
           <div className="relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 font-medium">₹</span>
             <input id="amount-input" type="number" value={amount} onChange={(e) => setAmount(e.target.value)}
               placeholder="0.00" min="0.01" max="10000" step="0.01" className="input-field pl-7 metric-value" />
           </div>
-          <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wide">Limit: $10,000.00</p>
+          <p className="text-[10px] text-slate-500 mt-1 uppercase tracking-wide">Limit: ₹10,000.00</p>
         </div>
 
         <div>

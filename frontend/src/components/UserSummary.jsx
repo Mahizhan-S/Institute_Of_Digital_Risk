@@ -32,9 +32,9 @@ function UserSummary({ users, refreshTrigger }) {
   }
 
   const statCards = summary ? [
-    { label: 'Total Credited', value: `$${summary.totalEarned.toFixed(2)}`, valueColor: 'text-emerald-400' },
-    { label: 'Total Debited', value: `$${summary.totalSpent.toFixed(2)}`, valueColor: 'text-red-400' },
-    { label: 'Net Balance', value: `$${summary.netBalance.toFixed(2)}`, valueColor: 'text-white' },
+    { label: 'Total Credited', value: `₹${summary.totalEarned.toFixed(2)}`, valueColor: 'text-emerald-400' },
+    { label: 'Total Debited', value: `₹${summary.totalSpent.toFixed(2)}`, valueColor: 'text-red-400' },
+    { label: 'Net Balance', value: `₹${summary.netBalance.toFixed(2)}`, valueColor: 'text-white' },
     { label: 'Volume (Count)', value: summary.transactionCount, valueColor: 'text-slate-300' },
   ] : [];
 
