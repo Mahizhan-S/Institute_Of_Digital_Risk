@@ -8,19 +8,19 @@ A full-stack application demonstrating backend system design with **FastAPI**, *
 
 ```mermaid
 flowchart TD
-    Client["💻 Client (React + Tailwind CSS)"]
+    Client["Client (React + Tailwind CSS)"]
 
-    subgraph Backend["🚀 FastAPI Backend"]
-        API["⚙️ API Endpoints"]
-        Validator["🛡️ Request Validator (Pydantic)"]
-        RL["⏱️ Rate Limiter"]
-        Idemp["🔁 Idempotency Guard"]
-        Ranking["🏆 Ranking Algorithm"]
+    subgraph Backend["FastAPI Backend"]
+        API["API Endpoints"]
+        Validator["Request Validator (Pydantic)"]
+        RL["Rate Limiter"]
+        Idemp["Idempotency Guard"]
+        Ranking["Ranking Algorithm"]
     end
 
-    subgraph Data["💾 Storage & Cache Layer"]
-        Redis[("⚡ Redis<br>In-Memory Cache")]
-        PG[("🐘 PostgreSQL<br>Persistent Storage")]
+    subgraph Data["Storage & Cache Layer"]
+        Redis[("Redis<br>In-Memory Cache")]
+        PG[("PostgreSQL<br>Persistent Storage")]
     end
 
     Client -- "HTTP Requests" --> API
